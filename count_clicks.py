@@ -1,24 +1,51 @@
+import streamlit as st
 import csv
+import io
 
-# Leer el CSV y contar keywords con >= 10 clicks
-count_gte_10 = 0
-count_gt_10 = 0
-total_rows = 0
+st.set_page_config(page_title="Keyword Click Counter", page_icon="📊")
 
-with open(r'c:\Users\aleja\OneDrive\Escritorio\app ctr\Hoja de cálculo sin título - Hoja 1.csv', 'r', encoding='utf-8') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        total_rows += 1
-        clicks_str = row['Clicks'].replace('.', '').replace(',', '')
-        try:
-            clicks = int(clicks_str)
-            if clicks >= 10:
-                count_gte_10 += 1
-            if clicks > 10:
-                count_gt_10 += 1
-        except ValueError:
-            print(f"Error parsing clicks: {row['Clicks']}")
+st.title("📊 Keyword Click Counter")
+st.markdown("""
+Esta herramienta cuenta cuántas palabras clave tienen más de 10 clicks en tu exportación de Google Search Console.
+""")
 
-print(f"Total de filas: {total_rows}")
-print(f"Keywords con >= 10 clicks: {count_gte_10}")
-print(f"Keywords con > 10 clicks: {count_gt_10}")
+# File uploader
+uploaded_file = st.file_uploader("Sube tu archivo CSV de Search Console", type="csv")
+
+if uploaded_file is not None:
+    # Leer el CSV
+    try:
+        content = uploaded_file.getvalue().decode('utf-8')
+        reader = csv.DictReader(io.StringIO(content))
+        
+        count_gte_10 = 0
+        count_gt_10 = 0
+        total_rows = 0
+        
+        for row in reader:
+            total_rows += 1
+            if 'Clicks' in row:
+                clicks_str = row['Clicks'].replace('.', '').replace(',', '')
+                try:
+                    clicks = int(clicks_str)
+                    if clicks >= 10:
+                        count_gte_10 += 1
+                    if clicks > 10:
+                        count_gt_10 += 1
+                except ValueError:
+                    continue
+        
+        # Mostrar resultados en Streamlit
+        st.divider()
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total de filas", total_rows)
+        col2.metric("Keywords (>= 10 clicks)", count_gte_10)
+        col3.metric("Keywords (> 10 clicks)", count_gt_10)
+        
+        st.success("¡Análisis completado!")
+        
+    except Exception as e:
+        st.error(f"Error al procesar el archivo: {e}")
+else:
+    st.info("Por favor, sube un archivo CSV para comenzar.")
+
