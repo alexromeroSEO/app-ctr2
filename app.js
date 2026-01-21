@@ -224,9 +224,26 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Calculate total rows and keywords >= 10 clicks (replicating Python logic)
+        let totalKeywords = 0;
+        let keywordsGte10 = 0;
+
+        data.forEach(row => {
+            totalKeywords++;
+            if (clicksKey && row[clicksKey]) {
+                let clicksStr = String(row[clicksKey]).replace(/\./g, '').replace(/,/g, '');
+                let clicksVal = parseInt(clicksStr, 10);
+                if (!isNaN(clicksVal) && clicksVal >= 10) {
+                    keywordsGte10++;
+                }
+            }
+        });
+
         return {
             chartData,
-            totalQueries: cleanedData.length
+            totalQueries: cleanedData.length,
+            totalKeywords: totalKeywords,
+            keywordsGte10: keywordsGte10
         };
     }
 
@@ -254,6 +271,15 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPostChart();
         renderChangeCards();
         renderComparisonChart();
+        updateSummaryMetrics();
+    }
+
+    function updateSummaryMetrics() {
+        document.getElementById('val-total-pre').textContent = preData.totalKeywords.toLocaleString();
+        document.getElementById('val-gte10-pre').textContent = preData.keywordsGte10.toLocaleString();
+
+        document.getElementById('val-total-post').textContent = postData.totalKeywords.toLocaleString();
+        document.getElementById('val-gte10-post').textContent = postData.keywordsGte10.toLocaleString();
     }
 
     function renderPreChart() {
