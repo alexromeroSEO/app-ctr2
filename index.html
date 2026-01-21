@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTR Comparator: AI Overviews Impact</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7" />
+                <path d="m9 12 2 2 4-4" />
+                <path d="m21 16-3.5 3.5L16 18" />
+            </svg>
+            <span>CTR Comparator</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" title="Comparador de CTR">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20v-6M6 20V10M18 20V4" />
+                    </svg>
+                    <span>Comparator</span>
+                </a>
+            </li>
+            <li class="nav-item" id="reset-container" style="display: none;">
+                <a href="#" class="nav-link" id="reset-btn" title="Resetear Datos">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                    </svg>
+                    <span>Resetear Datos</span>
+                </a>
+            </li>
+        </ul>
+
+    </aside>
+
+    <div class="main-wrapper">
+        <header>
+            <h1>CTR Comparator</h1>
+            <p>Compara el rendimiento CTR antes y después del lanzamiento de Google AI Overviews, según la posición
+                orgánica de tus datos.</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section id="upload-section" class="card">
+                <div class="dual-dropzone-container">
+                    <div class="dropzone-wrapper">
+                        <h3 class="dropzone-title">Pre Google AI Overviews</h3>
+                        <div id="dropzone-pre" class="dropzone dropzone-pre">
+                            <div class="dropzone-content">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <p>Arrastra tu CSV <span>Pre AI Overviews</span></p>
+                                <input type="file" id="file-input-pre" accept=".csv" hidden>
+                            </div>
+                            <p class="dropzone-hint">Solo archivos .csv</p>
+                            <div class="dropzone-loaded-indicator hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                                <span class="loaded-filename"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropzone-wrapper">
+                        <h3 class="dropzone-title">Post Google AI Overviews</h3>
+                        <div id="dropzone-post" class="dropzone dropzone-post">
+                            <div class="dropzone-content">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <p>Arrastra tu CSV <span>Post AI Overviews</span></p>
+                                <input type="file" id="file-input-post" accept=".csv" hidden>
+                            </div>
+                            <p class="dropzone-hint">Solo archivos .csv</p>
+                            <div class="dropzone-loaded-indicator hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                                <span class="loaded-filename"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="compare-btn" class="compare-btn" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M16 3h5v5M8 3H3v5M21 3l-7 7M3 21l7-7M21 21v-5h-5M3 21h5v-5" />
+                    </svg>
+                    Comparar Periodos
+                </button>
+            </section>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="hidden">
+
+                <!-- Individual Period Charts -->
+                <div class="charts-row">
+                    <div class="chart-container card">
+                        <div class="chart-container-header">
+                            <h2>Pre AI Overviews</h2>
+                            <span class="period-badge pre">Periodo Anterior</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="chart-pre"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container card">
+                        <div class="chart-container-header">
+                            <h2>Post AI Overviews</h2>
+                            <span class="period-badge post">Periodo Actual</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="chart-post"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Cards -->
+                <div class="change-section card">
+                    <div class="chart-container-header">
+                        <h2>Cambio de CTR por Posición</h2>
+                        <p class="section-subtitle">Impacto de AI Overviews en cada posición SERP</p>
+                    </div>
+                    <div id="change-cards" class="change-cards-grid">
+                        <!-- Cards will be generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Comparison Chart -->
+                <div class="comparison-chart-container card">
+                    <div class="chart-container-header">
+                        <h2>Comparativa de CTR: Pre vs Post AI Overviews</h2>
+                    </div>
+                    <div class="chart-wrapper-large">
+                        <canvas id="chart-comparison"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
